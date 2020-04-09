@@ -1,10 +1,10 @@
 # dhall-openssl
 
-OpenSSL configuration is a mess. I compiled the stuff I learned from reading through the man oages, so you don't have to.
+OpenSSL configuration is a mess. I compiled the stuff I learned from reading through the man pages, so you don't have to.
 
 ## Usage
 
-In this example we will first create a self-signed CA and then a client certificate that is signed by this CA.
+In this example we will first create a self-signed CA and then a client certificate that is signed by the CA.
 
 ### Creating the CA
 
@@ -25,7 +25,7 @@ in  openssl.mkCaConfig
 
 Then we generate the CA with these commands
 
-```
+```bash
 mkdir ca           # We will store the config and the certificates here
                    # Needs to be the same as the `caDir` in the config
 
@@ -58,7 +58,7 @@ in  openssl.mkConfig
 ```
 
 Then we use openssl again to create our certificates:
-```
+```bash
 export TEMP_FILE=$(mktemp)
 dhall text --file server.conf.dhall > "$TEMP_FILE"
 
