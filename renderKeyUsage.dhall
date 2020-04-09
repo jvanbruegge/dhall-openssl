@@ -96,7 +96,7 @@ in    λ(keyUsages : List KeyUsage)
 
       let lines =
             utils.concatFilter
-              "authorityKeyIdentifier = keyid:always, issuer:always"
+              ""
               ( toMap
                   { keyUsage = keyUsage, extendedKeyUsage = extendedKeyUsage }
               )

@@ -2,26 +2,47 @@ let DistinguishedName = ./DistinguishedName.dhall
 
 let KeyUsage = ./KeyUsage.dhall
 
-let CaConfig =
-      { defaultBits : Natural
-      , encryptKey : Bool
+let Policy = ./Policy.dhall
+
+let Config =
+      { allowedHosts : List Text
+      , caDir : Text
+      , database : Text
+      , defaultBits : Natural
+      , defaultDays : Natural
       , defaultMd : Text
-      , stringMask : Text
-      , utf8 : Bool
-      , prompt : Bool
-      , usage : List KeyUsage
+      , defaultPolicy : Optional Text
       , distinguishedName : DistinguishedName.Type
+      , encryptKey : Bool
+      , pathlen : Optional Natural
+      , policies : List { name : Text, policy : Policy.Type }
+      , prompt : Bool
+      , serial : Text
+      , stringMask : Text
+      , uniqueSubject : Bool
+      , usage : List KeyUsage
+      , utf8 : Bool
       }
 
-let caConfigDefaults =
-      { defaultBits = 4096
-      , encryptKey = True
+let configDefaults =
+      { database = "\$base_dir/ca.index"
+      , defaultBits = 4096
+      , defaultDays = 365
       , defaultMd = "sha256"
-      , stringMask = "utf8only"
-      , utf8 = True
-      , prompt = False
-      , usage = [KeyUsage.CrlSign, KeyUsage.DigitalSignature, KeyUsage.KeyCertSign]
+      , defaultPolicy = Some "server_policy"
       , distinguishedName = DistinguishedName.default
+      , encryptKey = True
+      , pathlen = None Natural
+      , policies =
+        [ { name = "server_policy", policy = Policy.default }
+        , { name = "ca_policy", policy = Policy.caPolicy }
+        ]
+      , prompt = False
+      , serial = "\$base_dir/ca.serial"
+      , stringMask = "utf8only"
+      , uniqueSubject = False
+      , usage = [ KeyUsage.CrlSign, KeyUsage.KeyCertSign ]
+      , utf8 = True
       }
 
-in  { default = caConfigDefaults, Type = CaConfig }
+in  { default = configDefaults, Type = Config }
