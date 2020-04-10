@@ -29,7 +29,11 @@ in    λ(config : Config.Type)
 
           [ req_ext ]
           basicConstraints = CA:false
-          subjectAltName = @alt_names
+          ${      if prelude.List.null Text config.altNames
+
+            then  ""
+
+            else  "subjectAltName = @alt_names"}
           ${render.keyUsage config.usage}
 
           ${distinguishedName}
