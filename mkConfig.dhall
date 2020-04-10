@@ -4,17 +4,19 @@ let prelude = ./prelude.dhall
 
 let render = ./render.dhall
 
+let mkAlt =
+        λ(type : Text)
+      → λ(values : List Text)
+      → prelude.Text.concatMapSep
+          "\n"
+          { index : Natural, value : Text }
+          (   λ(data : { index : Natural, value : Text })
+            → "${type}.${Natural/show data.index} = ${data.value}"
+          )
+          (prelude.List.indexed Text values)
+
 in    λ(config : Config.Type)
     → let distinguishedName = render.distinguishedName config.distinguishedName
-
-      let altNames =
-            prelude.Text.concatMapSep
-              "\n"
-              { index : Natural, value : Text }
-              (   λ(data : { index : Natural, value : Text })
-                → "DNS.${Natural/show data.index} = ${data.value}"
-              )
-              (prelude.List.indexed Text config.altNames)
 
       in  ''
           [ req ]
@@ -39,5 +41,6 @@ in    λ(config : Config.Type)
           ${distinguishedName}
 
           [ alt_names ]
-          ${altNames}
+          ${mkAlt "DNS" config.altNames}
+          ${mkAlt "IP" config.altIPs}
           ''
