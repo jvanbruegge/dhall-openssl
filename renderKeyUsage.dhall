@@ -12,7 +12,7 @@ let filterSome =
           (List Text)
           (   λ(curr : Optional Text)
             → λ(acc : List Text)
-            → Optional/fold
+            → prelude.Optional.fold
                 Text
                 curr
                 (List Text)
