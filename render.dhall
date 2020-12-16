@@ -7,8 +7,8 @@ let utils = ./utils.dhall
 let renderKeyUsage = ./renderKeyUsage.dhall
 
 let renderDistinguishedName =
-        λ(name : DistringuishedName.Type)
-      → utils.concatFilter
+      λ(name : DistringuishedName.Type) →
+        utils.concatFilter
           "[ distinguished_name ]"
           ( toMap
               { countryName = name.country
@@ -27,8 +27,8 @@ let renderBool =
       λ(true : Text) → λ(false : Text) → λ(s : Bool) → if s then true else false
 
 let renderPolicy =
-        λ(arg : { name : Text, policy : Policy.Type })
-      → let renderOpt = renderBool "supplied" "optional"
+      λ(arg : { name : Text, policy : Policy.Type }) →
+        let renderOpt = renderBool "supplied" "optional"
 
         in  ''
             [ ${arg.name} ]

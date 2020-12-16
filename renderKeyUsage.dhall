@@ -5,14 +5,14 @@ let utils = ./utils.dhall
 let KeyUsage = ./KeyUsage.dhall
 
 let filterSome =
-        λ(xs : List (Optional Text))
-      → List/fold
+      λ(xs : List (Optional Text)) →
+        List/fold
           (Optional Text)
           xs
           (List Text)
-          (   λ(curr : Optional Text)
-            → λ(acc : List Text)
-            → prelude.Optional.fold
+          ( λ(curr : Optional Text) →
+            λ(acc : List Text) →
+              prelude.Optional.fold
                 Text
                 curr
                 (List Text)
@@ -61,8 +61,8 @@ let extendedKeyUsageToString =
       , DecipherOnly = None Text
       }
 
-in    λ(keyUsages : List KeyUsage)
-    → let standardKeyUsages =
+in  λ(keyUsages : List KeyUsage) →
+      let standardKeyUsages =
             filterSome
               ( prelude.List.map
                   KeyUsage
@@ -81,24 +81,15 @@ in    λ(keyUsages : List KeyUsage)
               )
 
       let keyUsage =
-                  if prelude.List.null Text standardKeyUsages
-
+            if    prelude.List.null Text standardKeyUsages
             then  None Text
-
             else  Some (prelude.Text.concatSep ", " standardKeyUsages)
 
       let extendedKeyUsage =
-                  if prelude.List.null Text extendedKeyUsages
-
+            if    prelude.List.null Text extendedKeyUsages
             then  None Text
-
             else  Some (prelude.Text.concatSep ", " extendedKeyUsages)
 
-      let lines =
-            utils.concatFilter
-              ""
-              ( toMap
-                  { keyUsage = keyUsage, extendedKeyUsage = extendedKeyUsage }
-              )
+      let lines = utils.concatFilter "" (toMap { keyUsage, extendedKeyUsage })
 
       in  "${lines}"

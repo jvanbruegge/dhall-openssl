@@ -6,17 +6,17 @@ let prelude = ./prelude.dhall
 
 let render = ./render.dhall
 
-in    λ(config : Config.Type)
-    → let distinguishedName = render.distinguishedName config.distinguishedName
+in  λ(config : Config.Type) →
+      let distinguishedName = render.distinguishedName config.distinguishedName
 
       let mkConstraints =
-              λ(type : Text)
-            → λ(hosts : List Text)
-            → prelude.Text.concatMapSep
+            λ(type : Text) →
+            λ(hosts : List Text) →
+              prelude.Text.concatMapSep
                 "\n"
                 { index : Natural, value : Text }
-                (   λ(data : { index : Natural, value : Text })
-                  → "permitted;${type}.${Natural/show
+                ( λ(data : { index : Natural, value : Text }) →
+                    "permitted;${type}.${Natural/show
                                            data.index} = ${data.value}"
                 )
                 (prelude.List.indexed Text hosts)
@@ -57,10 +57,8 @@ in    λ(config : Config.Type)
 
           [ x509_ext ]
           basicConstraints = critical, CA:true${pathlen}
-          ${      if prelude.List.null Text config.allowedHosts
-
+          ${if    prelude.List.null Text config.allowedHosts
             then  ""
-
             else  "nameConstraints = critical, @name_constraints"}
           subjectKeyIdentifier = hash
           issuerAltName = issuer:copy

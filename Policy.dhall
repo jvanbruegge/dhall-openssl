@@ -28,4 +28,4 @@ let caPolicy =
       , emailAddress = True
       }
 
-in  { Type = Policy, default = serverPolicy, caPolicy = caPolicy }
+in  { Type = Policy, default = serverPolicy, caPolicy }

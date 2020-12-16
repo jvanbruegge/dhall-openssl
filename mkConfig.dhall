@@ -5,18 +5,18 @@ let prelude = ./prelude.dhall
 let render = ./render.dhall
 
 let mkAlt =
-        λ(type : Text)
-      → λ(values : List Text)
-      → prelude.Text.concatMapSep
+      λ(type : Text) →
+      λ(values : List Text) →
+        prelude.Text.concatMapSep
           "\n"
           { index : Natural, value : Text }
-          (   λ(data : { index : Natural, value : Text })
-            → "${type}.${Natural/show data.index} = ${data.value}"
+          ( λ(data : { index : Natural, value : Text }) →
+              "${type}.${Natural/show data.index} = ${data.value}"
           )
           (prelude.List.indexed Text values)
 
-in    λ(config : Config.Type)
-    → let distinguishedName = render.distinguishedName config.distinguishedName
+in  λ(config : Config.Type) →
+      let distinguishedName = render.distinguishedName config.distinguishedName
 
       in  ''
           [ req ]
@@ -31,10 +31,8 @@ in    λ(config : Config.Type)
 
           [ req_ext ]
           basicConstraints = CA:false
-          ${      if prelude.List.null Text config.altNames
-
+          ${if    prelude.List.null Text config.altNames
             then  ""
-
             else  "subjectAltName = @alt_names"}
           ${render.keyUsage config.usage}
 

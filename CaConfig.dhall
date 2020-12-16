@@ -6,7 +6,7 @@ let Policy = ./Policy.dhall
 
 let Config =
       { allowedHosts : List Text
-      , allowedIPs : List Text -- The IP needs to include a netmask, ie "192.169.0.0/255.255.255.0"
+      , allowedIPs : List Text
       , caDir : Text
       , database : Text
       , defaultBits : Natural
