@@ -9,14 +9,17 @@ let render = ./render.dhall
 in    λ(config : Config.Type)
     → let distinguishedName = render.distinguishedName config.distinguishedName
 
-      let allowedHosts =
-            prelude.Text.concatMapSep
-              "\n"
-              { index : Natural, value : Text }
-              (   λ(data : { index : Natural, value : Text })
-                → "permitted;DNS.${Natural/show data.index} = ${data.value}"
-              )
-              (prelude.List.indexed Text config.allowedHosts)
+      let mkConstraints =
+              λ(type : Text)
+            → λ(hosts : List Text)
+            → prelude.Text.concatMapSep
+                "\n"
+                { index : Natural, value : Text }
+                (   λ(data : { index : Natural, value : Text })
+                  → "permitted;${type}.${Natural/show
+                                           data.index} = ${data.value}"
+                )
+                (prelude.List.indexed Text hosts)
 
       let policies =
             prelude.Text.concatMapSep
@@ -33,7 +36,13 @@ in    λ(config : Config.Type)
               (λ(n : Natural) → ", pathlen:${Natural/show n}")
               ""
 
-    let defaultPolicy = prelude.Optional.fold Text config.defaultPolicy Text (\(policy : Text) -> "policy = ${policy}") ""
+      let defaultPolicy =
+            prelude.Optional.fold
+              Text
+              config.defaultPolicy
+              Text
+              (λ(policy : Text) → "policy = ${policy}")
+              ""
 
       in  ''
           [ req ]
@@ -78,5 +87,6 @@ in    λ(config : Config.Type)
           ${policies}
 
           [ name_constraints ]
-          ${allowedHosts}
+          ${mkConstraints "DNS" config.allowedHosts}
+          ${mkConstraints "IP" config.allowedIPs}
           ''

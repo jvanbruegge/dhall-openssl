@@ -6,6 +6,7 @@ let Policy = ./Policy.dhall
 
 let Config =
       { allowedHosts : List Text
+      , allowedIPs : List Text -- The IP needs to include a netmask, ie "192.169.0.0/255.255.255.0"
       , caDir : Text
       , database : Text
       , defaultBits : Natural
@@ -25,7 +26,9 @@ let Config =
       }
 
 let configDefaults =
-      { database = "\$base_dir/ca.index"
+      { allowedHosts = [] : List Text
+      , allowedIPs = [] : List Text
+      , database = "\$base_dir/ca.index"
       , defaultBits = 4096
       , defaultDays = 365
       , defaultMd = "sha256"
