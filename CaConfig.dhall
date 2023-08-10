@@ -8,6 +8,8 @@ let Config =
       { allowedHosts : List Text
       , allowedIPs : List Text
       , caDir : Text
+      , crl : Optional Text
+      , crlDir : Optional Text
       , database : Text
       , defaultBits : Natural
       , defaultDays : Natural
@@ -28,6 +30,8 @@ let Config =
 let configDefaults =
       { allowedHosts = [] : List Text
       , allowedIPs = [] : List Text
+      , crl = None Text
+      , crlDir = None Text
       , database = "\$base_dir/ca.index"
       , defaultBits = 4096
       , defaultDays = 365
