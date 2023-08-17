@@ -10,6 +10,7 @@ let Config =
       , caDir : Text
       , crl : Optional Text
       , crlDir : Optional Text
+      , crlNumber : Optional Text
       , database : Text
       , defaultBits : Natural
       , defaultDays : Natural
@@ -32,6 +33,7 @@ let configDefaults =
       , allowedIPs = [] : List Text
       , crl = None Text
       , crlDir = None Text
+      , crlNumber = None Text
       , database = "\$base_dir/ca.index"
       , defaultBits = 4096
       , defaultDays = 365

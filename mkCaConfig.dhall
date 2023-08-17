@@ -52,7 +52,7 @@ in  λ(config : Config.Type) →
               ( λ(p : Text) →
                   ''
 
-                  crl = $base_dir/${p}''
+                  crl = ${p}''
               )
               ""
 
@@ -64,7 +64,19 @@ in  λ(config : Config.Type) →
               ( λ(p : Text) →
                   ''
 
-                  crl_dir = $base_dir/${p}''
+                  crl_dir = ${p}''
+              )
+              ""
+
+      let crlNumber =
+            prelude.Optional.fold
+              Text
+              config.crlNumber
+              Text
+              ( λ(p : Text) →
+                  ''
+
+                  crl_dir = ${p}''
               )
               ""
 
@@ -98,7 +110,7 @@ in  λ(config : Config.Type) →
           base_dir = ${config.caDir}
           database = ${config.database}
           serial = ${config.serial}
-          new_certs_dir = ${config.caDir}${crl}${crlDir}
+          new_certs_dir = ${config.caDir}${crl}${crlDir}${crlNumber}
           default_md = ${config.defaultMd}
           default_days = ${Natural/show config.defaultDays}
           email_in_dn = no
