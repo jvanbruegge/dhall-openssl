@@ -44,6 +44,54 @@ in  λ(config : Config.Type) →
               (λ(policy : Text) → "policy = ${policy}")
               ""
 
+      let crl =
+            prelude.Optional.fold
+              Text
+              config.crl
+              Text
+              ( λ(p : Text) →
+                  ''
+
+                  crl = ${p}''
+              )
+              ""
+
+      let crlDir =
+            prelude.Optional.fold
+              Text
+              config.crlDir
+              Text
+              ( λ(p : Text) →
+                  ''
+
+                  crl_dir = ${p}''
+              )
+              ""
+
+      let crlNumber =
+            prelude.Optional.fold
+              Text
+              config.crlNumber
+              Text
+              ( λ(p : Text) →
+                  ''
+
+                  crl_dir = ${p}''
+              )
+              ""
+
+      let defaultCrlDays =
+            prelude.Optional.fold
+              Natural
+              config.defaultCrlDays
+              Text
+              ( λ(p : Natural) →
+                  ''
+
+                  default_crl_days = ${Natural/show p}''
+              )
+              ""
+
       in  ''
           [ req ]
           default_bits = ${Natural/show config.defaultBits}
@@ -74,7 +122,7 @@ in  λ(config : Config.Type) →
           base_dir = ${config.caDir}
           database = ${config.database}
           serial = ${config.serial}
-          new_certs_dir = ${config.caDir}
+          new_certs_dir = ${config.caDir}${crl}${crlDir}${crlNumber}${defaultCrlDays}
           default_md = ${config.defaultMd}
           default_days = ${Natural/show config.defaultDays}
           email_in_dn = no
