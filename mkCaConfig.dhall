@@ -80,6 +80,18 @@ in  λ(config : Config.Type) →
               )
               ""
 
+      let defaultCrlDays =
+            prelude.Optional.fold
+              Natural
+              config.defaultCrlDays
+              Text
+              ( λ(p : Natural) →
+                  ''
+
+                  default_crl_days = ${Natural/show p}''
+              )
+              ""
+
       in  ''
           [ req ]
           default_bits = ${Natural/show config.defaultBits}
@@ -110,7 +122,7 @@ in  λ(config : Config.Type) →
           base_dir = ${config.caDir}
           database = ${config.database}
           serial = ${config.serial}
-          new_certs_dir = ${config.caDir}${crl}${crlDir}${crlNumber}
+          new_certs_dir = ${config.caDir}${crl}${crlDir}${crlNumber}${defaultCrlDays}
           default_md = ${config.defaultMd}
           default_days = ${Natural/show config.defaultDays}
           email_in_dn = no
